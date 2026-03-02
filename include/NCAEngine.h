@@ -2,8 +2,9 @@
 
 #include<SFML/Graphics.hpp>
 #include<vector>
-#include "Genome.h"
 #include "config.h"
+#include"TinyML.h"
+#include "Genome.h"
 
 struct Cell{
     float channels[CHANNELS]={0.0f};

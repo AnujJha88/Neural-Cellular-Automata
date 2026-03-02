@@ -1,10 +1,13 @@
 #pragma once
-#include<vector>
-struct Genome{
-std::vector<float> w1;//48->32
-std::vector<float> b1;
-std::vector<float> w2;//32->16
-std::vector<float> b2;
-};
+#include "TinyML.h"
+#include "config.h"
 
-Genome create_random_genome()
+struct Genome{
+    TinyML::Linear layer1;
+    TinyML::Linear layer2;
+
+    Genome(){
+        layer1=TinyML::Linear(INPUT_SIZE,HIDDEN_NEURONS);
+        layer2=TinyML::Linear(HIDDEN_NEURONS,CHANNELS);
+    }
+};
