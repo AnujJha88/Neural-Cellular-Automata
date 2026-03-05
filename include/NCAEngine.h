@@ -19,7 +19,7 @@ private:
     sf::Texture grid_texture;
     sf::Sprite grid_sprite;
 
-    Cells& get_cell(int x, int y, std::vector<Cell>& grid);
+    Cell& get_cell(int x, int y, std::vector<Cell>& grid);
 public:
     Genome active_genome;
     NCAEngine();

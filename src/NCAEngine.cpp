@@ -77,4 +77,24 @@ void NCAEngine::update(){
             }
         }
     }
+    grid=next_grid;
 }
+
+void NCAEngine::draw(sf::RenderWindow& window){
+    sf::Uint8* pixels= new sf::Uint8[GRID_WIDTH*GRID_HEIGHT*4];
+    for(int i=0;i<GRID_WIDTH*GRID_HEIGHT;i++){
+        pixels[i*4+0]=grid[i].channels[0]*255;
+        pixels[i*4+1]=grid[i].channels[1]*255;
+        pixels[i*4+2]=grid[i].channels[2]*255;
+        pixels[i*4+3]=grid[i].channels[3]*255;
+    }
+
+    grid_texture.create(GRID_WIDTH,GRID_HEIGHT);
+    grid_texture.update(pixels);
+    delete[] pixels;
+    grid_sprite.setTexture(grid_texture);
+    grid_sprite.setScale(CELL_SIZE,CELL_SIZE);
+    window.draw(grid_sprite);
+}
+
+

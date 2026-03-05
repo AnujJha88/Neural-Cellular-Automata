@@ -1,8 +1,7 @@
 CXX=g++
-CXXFLAGS= -std=c++17 -O3 -Wall -Winclude -Wpedantic -Wextra
+CXXFLAGS= -std=c++17 -O3 -Wall -Iinclude -Wpedantic -Wextra
 LDFLAGS= -lsfml-graphics -lsfml-window -lsfml-system
-
-SRC= src/main.cpp src/NCAEngine.cpp src/Genome.cpp
+SRC = src/main.cpp src/NCAEngine.cpp src/Genome.cpp src/TinyML.cpp src/GeneticOps.cpp
 OBJ=$(SRC:.cpp=.o)
 
 TARGET= build/NCAEngine

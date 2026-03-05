@@ -25,7 +25,7 @@ namespace TinyML{
         Matrix weights;
         Matrix biases;
 
-        Linear(int in_size, out_size);
+        Linear(int in_size,int out_size);
         void forward(const Matrix& input,Matrix& output) const;
 
     };
