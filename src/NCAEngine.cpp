@@ -134,16 +134,26 @@ void NCAEngine::draw(sf::RenderWindow &window) {
 float NCAEngine::evaluate_homeostasis(int steps) {
   seed_center();
 
+  // Phase 1: Growth
   for (int i = 0; i < steps; i++) {
     update(); // simulate evolution without rendering
   }
 
-  int living = 0;
-  for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
-    if (grid[i].channels[3] > 0.1f)
-      living++;
-  }
+  // Phase 2: Homeostasis - measure stability by sampling
+  float total_error = 0.0f;
   float ideal = 83.0f;
-  float error = std::abs(living - ideal);
-  return 1.0f - error / ideal;
+  int sample_steps = 20;
+
+  for (int step = 0; step < sample_steps; step++) {
+    int living = 0;
+    for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+      if (grid[i].channels[3] > 0.1f)
+        living++;
+    }
+    total_error += std::abs(living - ideal);
+    update();
+  }
+
+  float avg_error = total_error / (float)sample_steps;
+  return 1.0f - avg_error / ideal;
 }

@@ -2,23 +2,23 @@
 
 A C++ implementation of Neural Cellular Automata featuring a custom lightweight neural network library (TinyML) and SFML-based rendering.
 
-## 🚀 Phase One: Core Engine Implementation
+## 🚀 Phase Two Completed: Genome Evolution & Training
 
-This project is currently in **Phase One** of development. The primary goal of this phase has been to establish a robust, fast, and compilable foundation for the NCA simulation. 
+This project has successfully completed **Phase Two**, which introduced genetic algorithms to evolve Neural Cellular Automata to achieve population homeostasis.
 
-**Current Features (Phase One):**
-- **Custom Minimal ML Library (`TinyML`):** Features essential linear layers and activation functions (ReLU, Sigmoid, Tanh, Softmax) built from scratch to keep dependencies light.
-- **NCA Simulation Engine:** A grid-based cellular automata model where cell states are updated simultaneously via forward passes through a neural network genome.
-- **SFML 3 Rendering:** Modern SFML 3 integration for visualizing the cellular grid updates in real-time.
-- **WSL/Linux Build Support:** A fully functioning `Makefile` that complies with C++17 standards, cleanly managing object files and executable targets.
+**Current Features (Phase Two Additions):**
+- **Genetic Algorithms (`PopulationManager` & `GenomeOps`):** Supports crossover and mutation of neural network weights across populations. Includes multi-threaded evaluation using `std::async` for fast parallel genome testing.
+- **Homeostasis Fitness Function:** Evaluates genomes over a sequence of time steps to ensure continuous stability (e.g., maintaining a perfectly balanced cell count of 83), rather than just hitting a target on a single frame.
+- **Improved Neural Update Rules:** Includes Stochastic Update Masks (50% async update chance) and Alive Masks (strict death for cells with no living neighbors) to ensure robust and realistic cellular growth.
+- **Training UI Controls:** The SFML window now supports interactive training commands to mutate, randomize, and manually trigger population evolution in real-time.
 
 ## 🔮 Upcoming Phases
 
 The architecture is designed to be extensible. Next phases incoming:
 
-- **Phase Two - Genome Evolution & Training:** Implementation of genetic algorithms (via `GenomeOps`) to train and mutate cellular automata rules, aiming for specific pattern formations or self-repair behaviors.
-- **Phase Three - Interactive UI & Controls:** Adding user interactions to draw/erase cells, tweak network weights in real-time, and pause/resume the simulation.
-- **Phase Four - Performance Optimization:** Exploration of multithreading or GPU compute shaders for simulating much larger grids at high framerates.
+- **Phase Three - Target Matrix Evolution:** Upgrading the fitness function to perform pixel-perfect comparisons against a target image or shape matrix, allowing the NCA to learn how to grow into and repair specific shapes (e.g. growing a lizard or a spaceship).
+
+
 
 ## 🛠️ Building the Project (WSL / Linux)
 

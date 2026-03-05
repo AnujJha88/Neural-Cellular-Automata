@@ -44,7 +44,7 @@ void PopulationManager::evolve_one_gen() {
     int p2 = rand() % (size / 2);
 
     Genome child = GenomeOps::crossover(population[p1].dna, population[p2].dna);
-    GenomeOps::mutate(child, 0.1f, 0.05f);
+    GenomeOps::mutate(child, 0.1f, 0.1f);
 
     next_gen.push_back({child, 0.0f});
   }

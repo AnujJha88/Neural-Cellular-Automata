@@ -13,6 +13,10 @@ int main() {
       "NCA Phase 2:Training");
   window.setFramerateLimit(60);
 
+  auto desktop = sf::VideoMode::getDesktopMode();
+  window.setPosition({(int)(desktop.size.x / 2 - window.getSize().x / 2),
+                      (int)(desktop.size.y / 2 - window.getSize().y / 2)});
+
   NCAEngine engine;
   PopulationManager pop(100);
 
