@@ -1,32 +1,30 @@
 #pragma once
 
-#include<SFML/Graphics.hpp>
-#include<vector>
-#include "config.h"
-#include"TinyML.h"
 #include "Genome.h"
+#include "TinyML.h"
+#include "config.h"
+#include <SFML/Graphics.hpp>
+#include <vector>
 
-struct Cell{
-    float channels[CHANNELS]={0.0f};
+struct Cell {
+  float channels[CHANNELS] = {0.0f};
 };
 
-class NCAEngine{
+class NCAEngine {
 private:
-    std::vector<Cell> grid;
-    std::vector<Cell> next_grid;//to enable simultaneous updates
+  std::vector<Cell> grid;
+  std::vector<Cell> next_grid; // to enable simultaneous updates
 
-    sf::Image grid_image;
-    sf::Texture grid_texture;
-    sf::Sprite grid_sprite;
+  sf::Texture grid_texture;
+  sf::Sprite grid_sprite;
 
-    Cell& get_cell(int x, int y, std::vector<Cell>& grid);
+  Cell &get_cell(int x, int y, std::vector<Cell> &grid);
+
 public:
-    Genome active_genome;
-    NCAEngine();
-    void update();
-    void draw(sf::RenderWindow& window);
-    void reset_to_random();
-    void seed_center();
-
+  Genome active_genome;
+  NCAEngine();
+  void update();
+  void draw(sf::RenderWindow &window);
+  void reset_to_random();
+  void seed_center();
 };
-

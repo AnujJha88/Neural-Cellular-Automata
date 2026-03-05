@@ -33,7 +33,7 @@ namespace GenomeOps
     TinyML::Matrix cross_matrix(const TinyML::Matrix& A, const TinyML::Matrix& B){
     TinyML::Matrix child(A.rows, A.cols);
     static std::mt19937 rng(std::random_device{}());
-    std::uniform_real_distribution<float> prob(0.0f, 1.0f);
+    std::uniform_real_distribution<float> coin(0.0f, 1.0f);
 
     for(size_t i=0;i<A.data.size();i++){
         child.data[i]=(coin(rng)==0)?A.data[i]:B.data[i];

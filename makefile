@@ -1,21 +1,21 @@
 CXX=g++
 CXXFLAGS= -std=c++17 -O3 -Wall -Iinclude -Wpedantic -Wextra
 LDFLAGS= -lsfml-graphics -lsfml-window -lsfml-system
-SRC = src/main.cpp src/NCAEngine.cpp src/Genome.cpp src/TinyML.cpp src/GeneticOps.cpp
-OBJ=$(SRC:.cpp=.o)
+SRC = src/main.cpp src/NCAEngine.cpp src/GenomeOps.cpp src/TinyML.cpp
+OBJ=$(SRC:src/%.cpp=obj/%.o)
 
 TARGET= build/NCAEngine
 
 all:dir $(TARGET)
 
 dir:
-	mkdir -p build
+	mkdir -p build obj
 
 $(TARGET): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(OBJ) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(TARGET) $(LDFLAGS)
 
-src/%.o: src/%.cpp
+obj/%.o: src/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 clean:
-	rm -rf $(OBJ) $(TARGET) build
+	rm -rf $(OBJ) $(TARGET) build obj
