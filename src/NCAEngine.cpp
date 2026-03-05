@@ -28,8 +28,16 @@ void NCAEngine::reset_to_random() {
 }
 
 Cell &NCAEngine::get_cell(int x, int y, std::vector<Cell> &target_grid) {
-  x = (x + GRID_WIDTH) % GRID_WIDTH;
-  y = (y + GRID_HEIGHT) % GRID_HEIGHT;
+  if (x < 0)
+    x += GRID_WIDTH;
+  else if (x >= GRID_WIDTH)
+    x -= GRID_WIDTH;
+
+  if (y < 0)
+    y += GRID_HEIGHT;
+  else if (y >= GRID_HEIGHT)
+    y -= GRID_HEIGHT;
+
   return target_grid[x + y * GRID_WIDTH];
 }
 
@@ -40,25 +48,48 @@ void NCAEngine::update() {
 
   for (int y = 0; y < GRID_HEIGHT; y++) {
     for (int x = 0; x < GRID_WIDTH; x++) {
+      // 1. Alive Mask: Check if there's any living neighbor in a 3x3 area
+      bool has_living_neighbor = false;
+      for (int dy = -1; dy <= 1; dy++) {
+        for (int dx = -1; dx <= 1; dx++) {
+          if (get_cell(x + dx, y + dy, grid).channels[3] > 0.1f) {
+            has_living_neighbor = true;
+            break;
+          }
+        }
+        if (has_living_neighbor)
+          break;
+      }
+
+      // If no living neighbors, the cell is strictly dead and zeroed out
+      if (!has_living_neighbor) {
+        get_cell(x, y, next_grid) = Cell{};
+        continue;
+      }
+
+      // 2. Stochastic update mask
       if (rand() % 2 == 0) {
         next_grid[x + y * GRID_WIDTH] = grid[x + y * GRID_WIDTH];
         continue;
       }
 
       Cell &c = get_cell(x, y, grid);
+      Cell tl = get_cell(x - 1, y - 1, grid);
+      Cell t = get_cell(x, y - 1, grid);
+      Cell tr = get_cell(x + 1, y - 1, grid);
+      Cell l = get_cell(x - 1, y, grid);
+      Cell r = get_cell(x + 1, y, grid);
+      Cell bl = get_cell(x - 1, y + 1, grid);
+      Cell b = get_cell(x, y + 1, grid);
+      Cell br = get_cell(x + 1, y + 1, grid);
       for (int ch = 0; ch < CHANNELS; ch++) {
-        float tl = get_cell(x - 1, y - 1, grid).channels[ch];
-        float t = get_cell(x, y - 1, grid).channels[ch];
-        float tr = get_cell(x + 1, y - 1, grid).channels[ch];
-        float l = get_cell(x - 1, y, grid).channels[ch];
-        float r = get_cell(x + 1, y, grid).channels[ch];
-        float bl = get_cell(x - 1, y + 1, grid).channels[ch];
-        float b = get_cell(x, y + 1, grid).channels[ch];
-        float br = get_cell(x + 1, y + 1, grid).channels[ch];
 
-        float grad_x = (tr + 2.0f * r + br) - (tl + 2.0f * l + bl);
-        float grad_y = (bl + 2.0f * b + br) - (tl + 2.0f * t + tr);
-
+        float grad_x =
+            (tr.channels[ch] + 2.0f * r.channels[ch] + br.channels[ch]) -
+            (tl.channels[ch] + 2.0f * l.channels[ch] + bl.channels[ch]);
+        float grad_y =
+            (bl.channels[ch] + 2.0f * b.channels[ch] + br.channels[ch]) -
+            (tl.channels[ch] + 2.0f * t.channels[ch] + tr.channels[ch]);
         input_mat.data[ch] = c.channels[ch];
         input_mat.data[ch + 16] = grad_x;
         input_mat.data[ch + 32] = grad_y;
@@ -98,4 +129,21 @@ void NCAEngine::draw(sf::RenderWindow &window) {
   grid_sprite.setTexture(grid_texture, true);
   grid_sprite.setScale({(float)CELL_SIZE, (float)CELL_SIZE});
   window.draw(grid_sprite);
+}
+
+float NCAEngine::evaluate_homeostasis(int steps) {
+  seed_center();
+
+  for (int i = 0; i < steps; i++) {
+    update(); // simulate evolution without rendering
+  }
+
+  int living = 0;
+  for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
+    if (grid[i].channels[3] > 0.1f)
+      living++;
+  }
+  float ideal = 83.0f;
+  float error = std::abs(living - ideal);
+  return 1.0f - error / ideal;
 }

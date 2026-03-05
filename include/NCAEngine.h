@@ -27,4 +27,5 @@ public:
   void draw(sf::RenderWindow &window);
   void reset_to_random();
   void seed_center();
+  float evaluate_homeostasis(int steps);
 };
