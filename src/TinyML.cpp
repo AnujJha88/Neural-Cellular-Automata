@@ -16,13 +16,13 @@ void Matrix::randomize(float min, float max) {
 Linear::Linear(int in_size, int out_size) {
   weights = Matrix(out_size, in_size);
   biases = Matrix(1, out_size);
-  weights.randomize(-1.0f, 1.0f);
+  weights.randomize(-0.1f, 0.1f);
   biases.fill(0.0f);
 }
 
 void Linear::forward(const Matrix &input, Matrix &output) const {
   if (output.rows != input.rows || output.cols != weights.cols) {
-    output = Matrix(input.rows, weights.cols);
+    output = Matrix(input.rows, weights.rows);
   }
   for (int i = 0; i < output.cols; i++) {
     float b = biases.data[i];

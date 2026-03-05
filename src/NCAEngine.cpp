@@ -83,15 +83,19 @@ void NCAEngine::update() {
 void NCAEngine::draw(sf::RenderWindow &window) {
   std::uint8_t *pixels = new std::uint8_t[GRID_WIDTH * GRID_HEIGHT * 4];
   for (int i = 0; i < GRID_WIDTH * GRID_HEIGHT; i++) {
-    pixels[i * 4 + 0] = grid[i].channels[0] * 255;
-    pixels[i * 4 + 1] = grid[i].channels[1] * 255;
-    pixels[i * 4 + 2] = grid[i].channels[2] * 255;
-    pixels[i * 4 + 3] = grid[i].channels[3] * 255;
+    pixels[i * 4 + 0] =
+        (std::uint8_t)(std::clamp(grid[i].channels[0], 0.0f, 1.0f) * 255);
+    pixels[i * 4 + 1] =
+        (std::uint8_t)(std::clamp(grid[i].channels[1], 0.0f, 1.0f) * 255);
+    pixels[i * 4 + 2] =
+        (std::uint8_t)(std::clamp(grid[i].channels[2], 0.0f, 1.0f) * 255);
+    pixels[i * 4 + 3] =
+        (std::uint8_t)(std::clamp(grid[i].channels[3], 0.0f, 1.0f) * 255);
   }
 
   grid_texture.update(pixels);
   delete[] pixels;
-  grid_sprite.setTexture(grid_texture);
+  grid_sprite.setTexture(grid_texture, true);
   grid_sprite.setScale({(float)CELL_SIZE, (float)CELL_SIZE});
   window.draw(grid_sprite);
 }
