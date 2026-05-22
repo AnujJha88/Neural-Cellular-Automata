@@ -17,7 +17,7 @@ void PopulationManager::evolve_one_gen() {
     futures.push_back(std::async(std::launch::async, [&ind]() {
       NCAEngine eval_engine;
       eval_engine.active_genome = ind.dna;
-      ind.fitness = eval_engine.evaluate_morphology(100);
+      ind.fitness = eval_engine.evaluate_homeostasis(100);
     }));
   }
 
