@@ -157,3 +157,44 @@ float NCAEngine::evaluate_homeostasis(int steps) {
   float avg_error = total_error / (float)sample_steps;
   return 1.0f - avg_error / ideal;
 }
+
+
+float NCAEngine::evaluate_morphology(int steps){
+    seed_center();
+
+    for(int i=0;i<steps;i++){
+    update();
+    }
+    //silently run the update
+
+    float score=0.0f;
+    float max_score=0.0f;
+
+    int cx=GRID_WIDTH/2;
+    int cy=GRID_HEIGHT/2;
+
+    for(int y=0;y<GRID_HEIGHT;y++){
+        for(int x=0;x<GRID_WIDTH;x++){
+                float dx=x-cx;
+                float dy=y-cy;
+                float dist=std::sqrt(dx*dx+dy*dy);
+
+                bool inTargetShape = (dist >= 8.0f && dist <= 12.0f);
+
+                bool isAlive=grid[x+y*GRID_WIDTH].channels[3]>0.1f;
+
+                if (inTargetShape) {
+                max_score += 1.0f; // Keep track of a "perfect" score
+                if (isAlive) {
+                    score += 1.0f; // Good! It grew where it was supposed to.
+                }
+            } else {
+                if (isAlive) {
+                    score -= 1.0f; // BAD! It grew outside the blueprint (Cancer).
+                }
+            }
+
+            }
+        }
+return std::max(0.0f, score / max_score);
+}

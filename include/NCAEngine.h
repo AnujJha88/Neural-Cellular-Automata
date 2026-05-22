@@ -28,4 +28,5 @@ public:
   void reset_to_random();
   void seed_center();
   float evaluate_homeostasis(int steps);
+float evaluate_morphology(int steps);
 };
